@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopify Försäljningsspårare</title>
+    <title>Lägg till Testorder</title>
     <style>
         body {
             display: flex;
@@ -12,61 +12,29 @@
             height: 100vh;
             margin: 0;
             font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #00b4db, #0083b0, #c0c0c0, #f0f0f0);
-            animation: gradientShift 10s ease infinite;
-            background-size: 300% 300%;
-        }
-        @keyframes gradientShift {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            background-color: #f0f8ff;
         }
         .container {
             text-align: center;
-            background-color: rgba(255, 255, 255, 0.9);
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-            animation: fadeIn 2s;
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.9); }
-            to { opacity: 1; transform: scale(1); }
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         h1 {
-            font-size: 2rem;
             color: #007acc;
         }
         p {
-            font-size: 1.5rem;
             color: #333;
-            margin-bottom: 10px;
-        }
-        #sales_count, #revenue, #profit {
-            font-size: 3rem;
-            color: #007acc;
-            font-weight: bold;
-            display: block;
-            margin-top: 10px;
-            transition: all 0.5s ease;
-        }
-        .count-up {
-            animation: countUp 0.8s ease;
-        }
-        @keyframes countUp {
-            from { transform: translateY(10px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
         }
         button {
-            margin-top: 20px;
-            padding: 10px 15px;
-            font-size: 1rem;
+            padding: 10px 20px;
+            font-size: 1.2rem;
             color: #fff;
             background-color: #007acc;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
         button:hover {
             background-color: #005f99;
@@ -75,51 +43,24 @@
 </head>
 <body>
     <div class="container">
-        <h1>Shopify Försäljningsspårare</h1>
-        <p>Antal Försäljningar:</p>
-        <span id="sales_count" class="count-up">0</span>
-        <p>Total Inkomst (SEK):</p>
-        <span id="revenue" class="count-up">0</span>
-        <p>Total Försäljning Efter Kostnad (SEK):</p>
-        <span id="profit" class="count-up">0</span>
-        <button onclick="addTestOrder()">Lägg till Testförsäljning</button>
-        <button onclick="resetAll()">Nollställ Allt</button>
+        <h1>Lägg till Testorder</h1>
+        <p>Tryck på knappen nedan för att lägga till en testorder i din app.</p>
+        <button onclick="addTestOrder()">Lägg till Testorder</button>
     </div>
 
     <script>
-        const backendUrl = 'http://192.168.1.144:5000';
-
-        function animateCount(elementId, newValue) {
-            const element = document.getElementById(elementId);
-            const currentValue = parseInt(element.textContent.replace(/\D/g, ''));
-            const increment = currentValue < newValue ? 1 : -1;
-            const interval = setInterval(() => {
-                const updatedValue = parseInt(element.textContent) + increment;
-                element.textContent = updatedValue;
-                if ((increment > 0 && updatedValue >= newValue) || (increment < 0 && updatedValue <= newValue)) {
-                    clearInterval(interval);
-                }
-            }, 10);
-        }
-
         function addTestOrder() {
-            fetch(`${backendUrl}/test_order`)
-                .then(response => response.json())
-                .then(data => {
-                    animateCount('sales_count', data.sales_count);
-                    animateCount('revenue', data.revenue);
-                    animateCount('profit', data.profit);
-                });
-        }
-
-        function resetAll() {
-            fetch(`${backendUrl}/reset`)
-                .then(response => response.json())
-                .then(data => {
-                    animateCount('sales_count', data.sales_count);
-                    animateCount('revenue', data.revenue);
-                    animateCount('profit', data.profit);
-                });
+            fetch('https://gold-experts-smile.loca.lt/add_product', {  // Use your Localtunnel URL
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Testorder tillagd! Totala försäljningar: " + data.sales_count);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("Kunde inte lägga till testorder.");
+            });
         }
     </script>
 </body>
